@@ -7,12 +7,19 @@ function playBall () {
 	let contact = getHitOutcome ();
 	let madeContact;
 	let baseHit;
+	let outOrSafe;
 
 
 	if (contact == true) {
 		madeContact = 'made contact with the ball';
-		getHit = getBaseHitType ();
-		baseHit = ('You hit a ' + getHit + '!');
+		outOrSafe = determineOutOrSafe ();
+		if (outOrSafe == true) {
+			getHit = getBaseHitType ();
+			baseHit = ('You hit a ' + getHit + '!');
+		}
+		else {
+			console.log('You hit a pop fly, you are out!');
+		}
 	}
 	else {
 		madeContact = 'swung on and missed the pitch';
@@ -20,7 +27,7 @@ function playBall () {
 
 	console.log('You threw a ' + pitchSpeed + ' mph ' + pitchType + '.');
 	console.log('Your ' + batterType + ' ' + madeContact + '!');
-	console.log(baseHit);
+	let check = outOrSafe === true ? console.log(baseHit) : console.log('You hit a pop fly, you are out!');
 
 }
 
@@ -147,6 +154,26 @@ function getBaseHitType () {
 	}
 }
 
+function determineOutOrSafe () {
+	let numberOfSides = 12;
+	let dieRoll = rollDie (numberOfSides);
+
+	if (dieRoll >= 1 && dieRoll <= 3) {
+		return false;
+	}
+	else if (dieRoll >= 4 && dieRoll <= 6) {
+		return true;
+	}
+	else if (dieRoll >= 7 && dieRoll <= 9) {
+		return false;
+	}
+	else if (dieRoll >= 10 && dieRoll <= 12) {
+		return true;
+	}
+	else {
+		return true;
+	}
+}
 
 playBall();
 
