@@ -6,17 +6,22 @@ function playBall () {
 	let batterType = getBatterType ();
 	let contact = getHitOutcome ();
 	let madeContact;
+	let baseHit;
 
-	console.log('You threw a ' + pitchSpeed + ' mph ' + pitchType + '.');
 
 	if (contact == true) {
 		madeContact = 'made contact with the ball';
+		getHit = getBaseHitType ();
+		baseHit = ('You hit a ' + getHit + '!');
 	}
 	else {
 		madeContact = 'swung on and missed the pitch';
 	}
 
+	console.log('You threw a ' + pitchSpeed + ' mph ' + pitchType + '.');
 	console.log('Your ' + batterType + ' ' + madeContact + '!');
+	console.log(baseHit);
+
 }
 
 
@@ -121,6 +126,26 @@ function getHitOutcome () {
 	}
 }
 
+function getBaseHitType () {
+	let numberOfSides = 20;
+	let dieRoll = rollDie (numberOfSides);
+
+	if (dieRoll >= 1 && dieRoll <= 5) {
+		return 'single';
+	}
+	else if (dieRoll >= 6 && dieRoll <= 10) {
+		return 'double';
+	}
+	else if (dieRoll >= 11 && dieRoll <= 15) {
+		return 'triple';
+	}
+	else if (dieRoll >= 16 && dieRoll <= 20) {
+		return 'homerun';
+	}
+	else {
+		return 'grandslam';
+	}
+}
 
 
 playBall();
