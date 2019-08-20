@@ -4,36 +4,44 @@ function playBall (testGame) {
 	
 	let game = testGame;
 
-	let pitchType = getPitchType ();
-	let pitchSpeed = getPitchSpeed ();
-	let batterType = getBatterType ();
-	let contact = getHitOutcome ();
-	let madeContact;
-	let baseHit;
-	let outOrSafe;
+	while (game.numberOfOuts < 3) {
 
+		let pitchType = getPitchType ();
+		let pitchSpeed = getPitchSpeed ();
+		let batterType = getBatterType ();
+		let contact = getHitOutcome ();
+		let madeContact;
+		let baseHit;
+		let outOrSafe;
 
-	if (contact == true) {
-		madeContact = 'made contact with the ball';
-		outOrSafe = determineOutOrSafe ();
-		if (outOrSafe == true) {
-			getHit = getBaseHitType (game);
-			baseHit = ('You hit a ' + getHit + '!');
+		if (contact == true) {
+			madeContact = 'made contact with the ball';
+			outOrSafe = determineOutOrSafe ();
+			if (outOrSafe == true) {
+				getHit = getBaseHitType (game);
+				baseHit = ('You hit a ' + getHit + '!');
+			}
+			else {
+				game.numberOfOuts++;
+				game.strikeCount = 0;
+				baseHit = ('You hit a pop fly, you are out!');
+			}
 		}
 		else {
-			game.numberOfOuts++;
-			console.log('You hit a pop fly, you are out!');
+			madeContact = 'swung on and missed the pitch';
+			game.strikeCount++;
+			if (game.strikeCount === 3) {
+				game.numberOfOuts++;
+			}
 		}
-	}
-	else {
-		madeContact = 'swung on and missed the pitch';
-		game.strikeCount++;
-	}
 
-	console.log('You threw a ' + pitchSpeed + ' mph ' + pitchType + '.');
-	console.log('Your ' + batterType + ' ' + madeContact + '!');
-	let check = outOrSafe === true ? console.log(baseHit) : console.log('You hit a pop fly, you are out!');
-
+		console.log('You threw a ' + pitchSpeed + ' mph ' + pitchType + '.');
+		console.log('Your ' + batterType + ' ' + madeContact + '!');
+		let check = outOrSafe === true ? console.log(baseHit) : console.log('You hit a pop fly, you are out!');
+		console.log('Strike Count: ' + game.strikeCount);
+		console.log('Outs: ' + game.numberOfOuts);
+		console.log('----------------------------');
+	}	
 }
 
 
@@ -155,6 +163,7 @@ function getBaseHitType (game) {
 		return 'triple';
 	}
 	else if (dieRoll >= 16 && dieRoll <= 20) {
+		game.score.homeTeamScore++;
 		return 'homerun';
 	}
 	else {
@@ -208,10 +217,13 @@ let userInput = prompt('Shall we play a game?');
 if (userInput === 'yes') {
 	let testGame = createGame();
 	let game1 = playBall(testGame);
+	console.log(game1.numberOfOuts);
+	console.log(game1.firstBase);
+	console.log(game1.secondBase);
+	console.log(game1.thirdBase);
+
 }
 
-let testGame = createGame();
-console.log(testGame.inning);
 
 
 
