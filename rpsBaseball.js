@@ -3,58 +3,14 @@
 function playBall (testGame) {
 	
 	let game = testGame;
-	game.inning = 3;
-	game.strikeCount = 2;
 	let homeTeam = game.homeTeam;
 	let awayTeam = game.awayTeam;
-	changeSides(game , homeTeam , awayTeam);
 
+	while (game.inning < 7) {
 
-	while (game.numberOfOuts < 3) {
+		playInning (game , homeTeam , awayTeam);
 
-		let pitchType = getPitchType ();
-		let pitchSpeed = getPitchSpeed ();
-		console.log('You threw a ' + pitchSpeed + ' mph ' + pitchType + '.');
-
-
-		let batterType = getBatterType ();
-		let contact = getHitOutcome ();
-		let madeContact;
-		let baseHit;
-		let outOrSafe;
-
-		if (contact == true) {
-			madeContact = 'made contact with the ball';
-			outOrSafe = determineOutOrSafe ();
-			if (outOrSafe == true) {
-				game.strikeCount = 0;
-				getHit = getBaseHitType (game);
-				baseHit = ('You hit a ' + getHit + '!');
-				// if ()
-			}
-			else {
-				game.numberOfOuts++;
-				game.strikeCount = 0;
-				baseHit = ('You hit a pop fly, you are out!');
-			}
-		}
-		else {
-			madeContact = 'swung on and missed the pitch';
-			game.strikeCount++;
-			if (game.strikeCount === 3) {
-				game.strikeCount = 0;
-				game.numberOfOuts++;
-			}
-		}
-
-		console.log('Your ' + batterType + ' ' + madeContact + '!');
-		// let check = outOrSafe === true ? console.log(baseHit);
-		console.log('Strike Count: ' + game.strikeCount);
-		console.log('Outs: ' + game.numberOfOuts);
-		console.log('          SCOREBOARD');
-		console.log('Home Team : ' + game.score.homeTeamScore + ' | Away Team : ' + game.score.awayTeamScore);
-		console.log('----------------------------');
-	}	
+	}
 }
 
 
@@ -159,26 +115,28 @@ function getHitOutcome () {
 	}
 }
 
-function getBaseHitType (game) {
+function getBaseHitType (game, scoringTeam) {
 	let numberOfSides = 20;
 	let dieRoll = rollDie (numberOfSides);
 
 	if (dieRoll >= 1 && dieRoll <= 5) {
-		game.firstBase = true;
+		scoringTeam.firstBase = true;
 		game.strikeCount = 0;
 		return 'single';
 	}
 	else if (dieRoll >= 6 && dieRoll <= 10) {
-		game.secondBase = true;
-
+		scoringTeam.secondBase = true;
+		game.strikeCount = 0;
 		return 'double';
 	}
 	else if (dieRoll >= 11 && dieRoll <= 15) {
-		game.thirdBase = true;
+		scoringTeam.thirdBase = true;
+		game.strikeCount = 0;
 		return 'triple';
 	}
 	else if (dieRoll >= 16 && dieRoll <= 20) {
-		game.score.homeTeamScore++;
+		scoringTeam.score++;
+		game.strikeCount = 0;
 		return 'homerun';
 	}
 	else {
@@ -223,6 +181,7 @@ function changeSides (game , homeTeam , awayTeam) {
 		awayTeam.secondBase = false;
 		awayTeam.thirdBase = false;
 		sideChange = console.log('Changing sides. Welcome to the bottom of the ' + game.inning + ' inning.');
+		console.log('-------------------------');
 	}
 	else if (game.isTopInning === false) {
 		game.isTopInning = true;
@@ -237,10 +196,83 @@ function changeSides (game , homeTeam , awayTeam) {
 		awayTeam.firstBase = false;
 		awayTeam.secondBase = false;
 		awayTeam.thirdBase = false;
-		sideChange = console.log('Changing sides. Welcome to the top of the ' + game.inning + ' inning.');
+		if (game.inning === 7) {
+			console.log('GAME OVER!');
+		}
+		else {
+			sideChange = console.log('Changing sides. Welcome to the top of the ' + game.inning + ' inning.');
+			console.log('----------------------------------');
+		}
 	}
 }
 
+function playInning (game , homeTeam , awayTeam) {
+
+	while (game.numberOfOuts <= 3) {
+
+		if (game.numberOfOuts === 3) {
+			changeSides (game, homeTeam, awayTeam);
+			return;
+		}
+		else {
+			let pitchType = getPitchType ();
+			let pitchSpeed = getPitchSpeed ();
+			console.log('You threw a ' + pitchSpeed + ' mph ' + pitchType + '.');
+
+			let batterType = getBatterType ();
+			let contact = getHitOutcome ();
+			let madeContact;
+			let baseHit;
+			let outOrSafe;
+
+			if (contact == true) {
+				madeContact = 'made contact with the ball';
+				outOrSafe = determineOutOrSafe ();
+				if (outOrSafe == true) {
+					game.strikeCount = 0;
+					let scoringTeam = checkScoringTeam (homeTeam , awayTeam);
+					getHit = getBaseHitType (game, scoringTeam);
+					baseHit = ('You hit a ' + getHit + '!');
+				}
+				else {
+					game.numberOfOuts++;
+					game.strikeCount = 0;
+					baseHit = ('You hit a pop fly, you are out!');
+				}
+			}
+			else {
+				madeContact = 'swung on and missed the pitch';
+				baseHit = ('Striiiiiiiiiiiiiike!');
+				game.strikeCount++;
+				if (game.strikeCount === 3) {
+					game.strikeCount = 0;
+					game.numberOfOuts++;
+				}
+			}	
+			console.log('Your ' + batterType + ' ' + madeContact + '!');
+			console.log(baseHit);
+			console.log('Strike Count: ' + game.strikeCount);
+			console.log('Outs: ' + game.numberOfOuts);
+			console.log('----------------------------------');
+			console.log('|           SCORECARD            |');
+			console.log('| Home Team : ' + homeTeam.score + ' | Away Team : ' + awayTeam.score + '  |');
+			console.log('| Inning: ' + game.inning + '                      |');
+			console.log('----------------------------------');
+		}
+	}
+}
+
+function checkScoringTeam (homeTeam , awayTeam) {
+	if (homeTeam.isPitching === false) {
+		return homeTeam;
+	}
+	else if (awayTeam.isPitching === false) {
+		return awayTeam;
+	}
+	else {
+		return;
+	}
+}
 
 function createGame() {
 	return {
@@ -282,6 +314,7 @@ function masterInitilizer () {
 		}
 		else if (homeOrAway === 'away') {
 			testGame.awayTeam.isUserControlled = true;
+
 		}
 		else {
 			console.log('Please try again.');
