@@ -3,11 +3,17 @@
 function playBall (testGame) {
 	
 	let game = testGame;
+	let homeTeam = game.homeTeam;
+	let awayTeam = game.awayTeam;
+
 
 	while (game.numberOfOuts < 3) {
 
 		let pitchType = getPitchType ();
 		let pitchSpeed = getPitchSpeed ();
+		console.log('You threw a ' + pitchSpeed + ' mph ' + pitchType + '.');
+
+
 		let batterType = getBatterType ();
 		let contact = getHitOutcome ();
 		let madeContact;
@@ -18,8 +24,10 @@ function playBall (testGame) {
 			madeContact = 'made contact with the ball';
 			outOrSafe = determineOutOrSafe ();
 			if (outOrSafe == true) {
+				game.strikeCount = 0;
 				getHit = getBaseHitType (game);
 				baseHit = ('You hit a ' + getHit + '!');
+				// if ()
 			}
 			else {
 				game.numberOfOuts++;
@@ -31,15 +39,17 @@ function playBall (testGame) {
 			madeContact = 'swung on and missed the pitch';
 			game.strikeCount++;
 			if (game.strikeCount === 3) {
+				game.strikeCount = 0;
 				game.numberOfOuts++;
 			}
 		}
 
-		console.log('You threw a ' + pitchSpeed + ' mph ' + pitchType + '.');
 		console.log('Your ' + batterType + ' ' + madeContact + '!');
-		let check = outOrSafe === true ? console.log(baseHit) : console.log('You hit a pop fly, you are out!');
+		// let check = outOrSafe === true ? console.log(baseHit);
 		console.log('Strike Count: ' + game.strikeCount);
 		console.log('Outs: ' + game.numberOfOuts);
+		console.log('          SCOREBOARD');
+		console.log('Home Team : ' + game.score.homeTeamScore + ' | Away Team : ' + game.score.awayTeamScore);
 		console.log('----------------------------');
 	}	
 }
@@ -152,10 +162,12 @@ function getBaseHitType (game) {
 
 	if (dieRoll >= 1 && dieRoll <= 5) {
 		game.firstBase = true;
+		game.strikeCount = 0;
 		return 'single';
 	}
 	else if (dieRoll >= 6 && dieRoll <= 10) {
 		game.secondBase = true;
+
 		return 'double';
 	}
 	else if (dieRoll >= 11 && dieRoll <= 15) {
@@ -199,14 +211,22 @@ function createGame() {
 	return {
 		inning: 1,
 		numberOfOuts: 0,
-		topOrBottomOfInning: true,
+		isTopInning: true,
 		strikeCount: 0,
-		firstBase: false,
-		secondBase: false,
-		thirdBase: false,
-		score: {
-			homeTeamScore: 0,
-			awayTeamScore: 0
+
+		homeTeam: {
+			firstBase: false,
+			secondBase: false,
+			thirdBase: false,
+			score: 0,
+			isPitching: true
+		},
+		awayTeam: {
+			firstBase: false,
+			secondBase: false,
+			thirdBase: false,
+			score: 0,
+			isPitching: false
 		}
 	}
 }
@@ -217,11 +237,6 @@ let userInput = prompt('Shall we play a game?');
 if (userInput === 'yes') {
 	let testGame = createGame();
 	let game1 = playBall(testGame);
-	console.log(game1.numberOfOuts);
-	console.log(game1.firstBase);
-	console.log(game1.secondBase);
-	console.log(game1.thirdBase);
-
 }
 
 
