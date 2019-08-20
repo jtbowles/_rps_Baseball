@@ -1,6 +1,9 @@
 
 
-function playBall () {
+function playBall (testGame) {
+	
+	let game = testGame;
+
 	let pitchType = getPitchType ();
 	let pitchSpeed = getPitchSpeed ();
 	let batterType = getBatterType ();
@@ -14,15 +17,17 @@ function playBall () {
 		madeContact = 'made contact with the ball';
 		outOrSafe = determineOutOrSafe ();
 		if (outOrSafe == true) {
-			getHit = getBaseHitType ();
+			getHit = getBaseHitType (game);
 			baseHit = ('You hit a ' + getHit + '!');
 		}
 		else {
+			game.numberOfOuts++;
 			console.log('You hit a pop fly, you are out!');
 		}
 	}
 	else {
 		madeContact = 'swung on and missed the pitch';
+		game.strikeCount++;
 	}
 
 	console.log('You threw a ' + pitchSpeed + ' mph ' + pitchType + '.');
@@ -133,17 +138,20 @@ function getHitOutcome () {
 	}
 }
 
-function getBaseHitType () {
+function getBaseHitType (game) {
 	let numberOfSides = 20;
 	let dieRoll = rollDie (numberOfSides);
 
 	if (dieRoll >= 1 && dieRoll <= 5) {
+		game.firstBase = true;
 		return 'single';
 	}
 	else if (dieRoll >= 6 && dieRoll <= 10) {
+		game.secondBase = true;
 		return 'double';
 	}
 	else if (dieRoll >= 11 && dieRoll <= 15) {
+		game.thirdBase = true;
 		return 'triple';
 	}
 	else if (dieRoll >= 16 && dieRoll <= 20) {
@@ -175,11 +183,35 @@ function determineOutOrSafe () {
 	}
 }
 
-playBall();
+// playBall();
+
+
+function createGame() {
+	return {
+		inning: 1,
+		numberOfOuts: 0,
+		topOrBottomOfInning: true,
+		strikeCount: 0,
+		firstBase: false,
+		secondBase: false,
+		thirdBase: false,
+		score: {
+			homeTeamScore: 0,
+			awayTeamScore: 0
+		}
+	}
+}
 
 
 
+let userInput = prompt('Shall we play a game?');
+if (userInput === 'yes') {
+	let testGame = createGame();
+	let game1 = playBall(testGame);
+}
 
+let testGame = createGame();
+console.log(testGame.inning);
 
 
 
@@ -214,3 +246,37 @@ playBall();
 // }
 
 // master();
+
+
+
+
+
+////////// OBJECT TESTING
+
+// function createNewGame () {
+
+// 	const game = {
+// 		inning: 1,
+// 		numberOfOuts: 0,
+// 		topOrBottomOfInning: true,
+// 		score: {
+// 			homeTeamScore: 0,
+// 			awayTeamScore: 0
+// 		}
+// 	},
+
+// 	addInning:
+// }
+
+
+
+// console.log(game.inning);
+
+/////// FACTORY FUNCTION
+
+
+
+
+
+
+
