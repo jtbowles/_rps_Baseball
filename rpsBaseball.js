@@ -204,8 +204,29 @@ function determineOutOrSafe () {
 	}
 }
 
-// playBall();
+function changeSides (game) {
+	let sideChange;
 
+	if (game.isTopInning === true) {
+		game.isTopInning = false;
+		game.numberOfOuts = 0;
+		game.strikeCount = 0;
+		game.homeTeam.isPitching = false;
+		game.awayTeam.isPitching = true;
+		sideChange = console.log('Changing sides. Welcome to the bottom of the ' + game.inning + ' inning.');
+	}
+	else if (game.isTopInning === false) {
+		game.isTopInning = true;
+		game.numberOfOuts = 0;
+		game.strikeCount = 0;
+		game.inning++;
+		game.homeTeam.isPitching = true;
+		game.awayTeam.isPitching = false;
+		sideChange = console.log('Changing sides. Welcome to the top of the ' + game.inning + ' inning.');
+	}
+}
+
+function 
 
 function createGame() {
 	return {
@@ -219,26 +240,50 @@ function createGame() {
 			secondBase: false,
 			thirdBase: false,
 			score: 0,
-			isPitching: true
+			isPitching: true,
+			isUserControlled: false,
 		},
 		awayTeam: {
 			firstBase: false,
 			secondBase: false,
 			thirdBase: false,
 			score: 0,
-			isPitching: false
+			isPitching: false,
+			isUserControlled: false,
 		}
 	}
 }
 
 
 
-let userInput = prompt('Shall we play a game?');
-if (userInput === 'yes') {
-	let testGame = createGame();
-	let game1 = playBall(testGame);
+function masterInitilizer () {
+	let userInput = prompt('Shall we play a game? [yes] or [no]');
+	let homeOrAway = prompt('Would you like to be the [home] or [away] team?');
+
+	if (userInput === 'yes') {
+		let testGame = createGame();
+
+		if (homeOrAway === 'home') {
+			testGame.homeTeam.isUserControlled = true;
+		}
+		else if (homeOrAway === 'away') {
+			testGame.awayTeam.isUserControlled = true;
+		}
+		else {
+			console.log('Please try again.');
+			masterInitilizer();
+		}
+
+		let game1 = playBall(testGame);
+
+	}
+
+
 }
 
+
+
+masterInitilizer ();
 
 
 
