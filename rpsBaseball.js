@@ -3,8 +3,11 @@
 function playBall (testGame) {
 	
 	let game = testGame;
+	game.inning = 3;
+	game.strikeCount = 2;
 	let homeTeam = game.homeTeam;
 	let awayTeam = game.awayTeam;
+	changeSides(game , homeTeam , awayTeam);
 
 
 	while (game.numberOfOuts < 3) {
@@ -204,15 +207,21 @@ function determineOutOrSafe () {
 	}
 }
 
-function changeSides (game) {
+function changeSides (game , homeTeam , awayTeam) {
 	let sideChange;
 
 	if (game.isTopInning === true) {
 		game.isTopInning = false;
 		game.numberOfOuts = 0;
 		game.strikeCount = 0;
-		game.homeTeam.isPitching = false;
-		game.awayTeam.isPitching = true;
+		homeTeam.isPitching = false;
+		homeTeam.firstBase = false;
+		homeTeam.secondBase = false;
+		homeTeam.thirdBase = false;
+		awayTeam.isPitching = true;
+		awayTeam.firstBase = false;
+		awayTeam.secondBase = false;
+		awayTeam.thirdBase = false;
 		sideChange = console.log('Changing sides. Welcome to the bottom of the ' + game.inning + ' inning.');
 	}
 	else if (game.isTopInning === false) {
@@ -220,13 +229,18 @@ function changeSides (game) {
 		game.numberOfOuts = 0;
 		game.strikeCount = 0;
 		game.inning++;
-		game.homeTeam.isPitching = true;
-		game.awayTeam.isPitching = false;
+		homeTeam.isPitching = true;
+		homeTeam.firstBase = false;
+		homeTeam.secondBase = false;
+		homeTeam.thirdBase = false;
+		awayTeam.isPitching = false;
+		awayTeam.firstBase = false;
+		awayTeam.secondBase = false;
+		awayTeam.thirdBase = false;
 		sideChange = console.log('Changing sides. Welcome to the top of the ' + game.inning + ' inning.');
 	}
 }
 
-function 
 
 function createGame() {
 	return {
