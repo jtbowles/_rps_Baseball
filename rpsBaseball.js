@@ -329,6 +329,56 @@ function masterInitilizer () {
 }
 
 
+function getPitch () {
+	let pitchType = getPitchType ();
+	let pitchSpeed = getPitchSpeed ();
+	document.getElementById('demo').innerHTML = 'You threw a ' + pitchSpeed + ' mph ' + pitchType + '.';
+}
+
+function getScoreCard () {
+			let game = createGame();
+			let batterType = getBatterType ();
+			let contact = getHitOutcome ();
+			let madeContact;
+			let baseHit;
+			let outOrSafe;
+
+			if (contact == true) {
+				madeContact = 'made contact with the ball';
+				outOrSafe = determineOutOrSafe ();
+				if (outOrSafe == true) {
+					game.strikeCount = 0;
+					let scoringTeam = checkScoringTeam (game.homeTeam , game.awayTeam);
+					getHit = getBaseHitType (game, scoringTeam);
+					baseHit = ('You hit a ' + getHit + '!');
+				}
+				else {
+					game.numberOfOuts++;
+					game.strikeCount = 0;
+					baseHit = ('You hit a pop fly, you are out!');
+				}
+			}
+			else {
+				madeContact = 'swung on and missed the pitch';
+				baseHit = ('Striiiiiiiiiiiiiike!');
+				game.strikeCount++;
+				if (game.strikeCount === 3) {
+					game.strikeCount = 0;
+					game.numberOfOuts++;
+				}
+			}	
+			document.getElementById('one').innerHTML = 'Your ' + batterType + ' ' + madeContact + '!';
+			document.getElementById('two').innerHTML = baseHit;
+			document.getElementById('three').innerHTML = 'Strike Count: ' + game.strikeCount;
+			document.getElementById('four').innerHTML = 'Outs: ' + game.numberOfOuts;
+			document.getElementById('five').innerHTML = '----------------------------------';
+			document.getElementById('six').innerHTML = '|           SCORECARD            |';
+			document.getElementById('seven').innerHTML = '| Home Team : ' + game.homeTeam.score + ' | Away Team : ' + game.awayTeam.score + '  |';
+			document.getElementById('eight').innerHTML = '| Inning: ' + game.inning + '                      |';
+			document.getElementById('nine').innerHTML = '----------------------------------';
+
+}
+
 
 masterInitilizer ();
 
