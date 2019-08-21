@@ -337,9 +337,6 @@ masterInitilizer ();
 
 
 
-
-
-
 // function master () {
 // 	let damage = determineDamage ();
 // 	let damageMulitplier = determineDamageMultiplier ();
